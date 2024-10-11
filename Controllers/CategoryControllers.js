@@ -15,27 +15,25 @@ const updateCategory = asyncHandler(async (req, res) => {
         if (image) {
             // Upload new image to Cloudinary
             const uploadResp = await cloudinary.uploader.upload(image, {
-                upload_preset: "flawless_", // Replace with your actual preset
-                public_id: publicID, // Use existing publicID if available
-                invalidate: true, // Invalidate cached versions of the image
+                upload_preset: "flawless_",
+                public_id: publicID,
+                invalidate: true,
             });
 
             if (uploadResp) {
-                // Prepare the updated category object
                 const updatedCategoryData = {
-                    name,
+                    name: name || undefined,
                     categoryImage: {
                         url: uploadResp.url,
                         publicID: uploadResp.public_id,
-                    }, // Only store the secure URL
+                    },
                 };
 
-                // Update the category in the database
                 const updatedCategory = await categoryModel.findByIdAndUpdate(
                     id,
                     updatedCategoryData,
                     {
-                        new: true, // Return the updated document
+                        new: true,
                     }
                 );
 
@@ -45,10 +43,14 @@ const updateCategory = asyncHandler(async (req, res) => {
                 });
             }
         } else {
-            // If no image is uploaded, just update the name
+            const updateData = {};
+            if (name) {
+                updateData.name = name;
+            }
+
             const updatedCategory = await categoryModel.findByIdAndUpdate(
                 id,
-                { name: name && name },
+                updateData,
                 { new: true }
             );
 
@@ -65,6 +67,7 @@ const updateCategory = asyncHandler(async (req, res) => {
         });
     }
 });
+
 const createCategory = asyncHandler(async (req, resp) => {
     const { name, categoryImage } = req.body;
     if (!name || !categoryImage) {

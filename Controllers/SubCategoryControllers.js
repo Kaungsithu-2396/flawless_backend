@@ -97,10 +97,30 @@ const deleteSubCategory = asyncHandler(async (req, resp) => {
         message: "delete success",
     });
 });
+// @desc GET  subCategory By ID
+// @route GET /api/subCategory/:id
+// @access Private
+const getSubCategoryByID = asyncHandler(async (req, resp) => {
+    const { id } = req.params;
+    if (!id) {
+        resp.status(500);
+        throw new Error("please provide the id");
+    }
+    const isValidSubCategory = await subCategoryModel.findById(id);
+    if (!isValidSubCategory) {
+        resp.status(404);
+        throw new Error("no product found");
+    }
+    resp.status(200).send({
+        message: "success",
+        data: isValidSubCategory,
+    });
+});
 module.exports = {
     createSubCategory,
     getSubCategoryAsParentCategory,
     updateSubCategory,
     deleteSubCategory,
     getAllSubCategories,
+    getSubCategoryByID,
 };

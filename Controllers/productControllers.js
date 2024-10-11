@@ -156,10 +156,44 @@ const updateProduct = asyncHandler(async (req, res) => {
         });
     }
 });
-
+// @desc GET get Product
+// @route GET /api/product
+// @access Public
+const deleteProduct = asyncHandler(async (req, resp) => {
+    const { id } = req.params;
+    if (!id) {
+        resp.status(500);
+        throw new Error("invalid id");
+    }
+    const isValidProduct = await productModel.findById(id);
+    if (!isValidProduct) {
+        resp.status(404);
+        throw new Error("no proudct found");
+    }
+    const deleteProductImages = isValidProduct.productImageCol.map(
+        async (el) => {
+            try {
+                const { url, publicID } = el;
+                const deleteResp = await cloudinary.uploader.destroy(publicID);
+                return {
+                    message: "success",
+                };
+            } catch (error) {
+                console.log(error);
+                throw new Error("delete operation fail");
+            }
+        }
+    );
+    const deleteImages = await Promise.all(deleteProductImages);
+    await productModel.findByIdAndDelete(id);
+    resp.status(200).send({
+        message: "delete success",
+    });
+});
 module.exports = {
     createProduct,
     getAllProduct,
     getSpecificProduct,
     updateProduct,
+    deleteProduct,
 };
