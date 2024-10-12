@@ -11,11 +11,13 @@ const connectDB = require("./config/dbConnect");
 const productRoute = require("./Routes/productRoutes");
 const homePageRoute = require("./Routes/homepageRoute");
 const logOutRoute = require("./Routes/adminLogOutRoutes");
+const orderRoute = require("./Routes/orderRouters");
 connectDB();
 const app = express();
 app.use(
     cors({
-        origin: process.env.FE_BASE_URL,
+        origin: [process.env.FE_BASE_URL, process.env.PRODUCTION_BASE_URL],
+        default: process.env.FE_BASE_URL,
         credentials: true,
     })
 );
@@ -31,6 +33,7 @@ app.use("/api/home", homePageRoute);
 app.use("/api/contact", contactRoute);
 app.use("/api/login", adminRoute);
 app.use("/api/logout", logOutRoute);
+app.use("/api/order", orderRoute);
 app.use(errorHandler);
 app.listen(PORT, () => {
     console.log(`backend is running on ${PORT}`);
