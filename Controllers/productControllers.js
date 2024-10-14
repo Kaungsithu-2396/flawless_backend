@@ -61,7 +61,12 @@ const createProduct = asyncHandler(async (req, resp) => {
 // @route GET /api/product
 // @access Public
 const getAllProduct = asyncHandler(async (req, resp) => {
-    const allProducts = await productModel.find();
+    const page = req.query.page || 0;
+    const itemsPerPage = 12;
+    const allProducts = await productModel
+        .find()
+        .skip(page * itemsPerPage)
+        .limit(itemsPerPage);
     resp.status(200).send({
         data: allProducts,
     });
@@ -190,7 +195,23 @@ const deleteProduct = asyncHandler(async (req, resp) => {
         message: "delete success",
     });
 });
+const getProductByProductGenre = asyncHandler(async (req, resp) => {
+    const { category, subCategory } = req.query;
+    let query = {};
+    if (category) {
+        query.category = category;
+    }
+    if (subCategory) {
+        query[`subCategory.name`] = subCategory;
+    }
+    const products = await productModel.find(query);
+    resp.status(200).send({
+        products,
+    });
+});
+
 module.exports = {
+    getProductByProductGenre,
     createProduct,
     getAllProduct,
     getSpecificProduct,

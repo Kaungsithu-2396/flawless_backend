@@ -12,6 +12,7 @@ const productRoute = require("./Routes/productRoutes");
 const homePageRoute = require("./Routes/homepageRoute");
 const logOutRoute = require("./Routes/adminLogOutRoutes");
 const orderRoute = require("./Routes/orderRouters");
+const { searchRoute } = require("./Routes/searchRoute");
 connectDB();
 const app = express();
 app.use(
@@ -34,6 +35,7 @@ app.use("/api/contact", contactRoute);
 app.use("/api/login", adminRoute);
 app.use("/api/logout", logOutRoute);
 app.use("/api/order", orderRoute);
+app.use("/api/search", searchRoute);
 app.use(errorHandler);
 app.listen(PORT, () => {
     console.log(`backend is running on ${PORT}`);

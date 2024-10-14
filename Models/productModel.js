@@ -10,6 +10,10 @@ const productSchema = new mongoose.Schema(
             requred: [true, "please provide the product code"],
             unique: true,
         },
+        count: {
+            type: Number,
+            default: 1,
+        },
         stock: {
             type: Number,
             required: [true, "please provide the stock"],
