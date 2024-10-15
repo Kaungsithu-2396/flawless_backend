@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv").config({ path: "./config.env" });
 const errorHandler = require("./middleware/errorHandler");
 const categoryRoutes = require("./Routes/categoryRoutes");
+const bodyParser = require("body-parser");
 const subCategoryRoute = require("./Routes/subCategoryRoutes");
 const contactRoute = require("./Routes/contactRoutes");
 const adminRoute = require("./Routes/adminRoutes");
@@ -22,10 +23,10 @@ app.use(
         credentials: true,
     })
 );
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.get("/", (req, resp) => {
-    resp.send("minglar par");
+    resp.send("Welcome to flawless server");
 });
 app.use("/api/category", categoryRoutes);
 app.use("/api/subCategory", subCategoryRoute);
