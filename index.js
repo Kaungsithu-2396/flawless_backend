@@ -40,3 +40,4 @@ app.use(errorHandler);
 app.listen(PORT, () => {
     console.log(`backend is running on ${PORT}`);
 });
+module.exports = app;

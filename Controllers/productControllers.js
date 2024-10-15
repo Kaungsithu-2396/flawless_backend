@@ -5,6 +5,8 @@ const cloudinary = require("../config/cloudinaryConfig");
 // @route POST /api/product
 // @access Private
 const createProduct = asyncHandler(async (req, resp) => {
+    console.log(req.body);
+
     const {
         name,
         price,
@@ -13,7 +15,6 @@ const createProduct = asyncHandler(async (req, resp) => {
         description,
         category,
         subCategory,
-        productImage,
     } = req.body;
     if (
         !name ||
@@ -23,25 +24,39 @@ const createProduct = asyncHandler(async (req, resp) => {
         !description ||
         !description ||
         !category ||
-        !subCategory ||
-        !productImage
+        !subCategory
     ) {
         resp.status(500);
         throw new Error("incomplete data");
     }
+    if (!req.files || req.files.length === 0) {
+        resp.status(404);
+        throw new Error("file not found");
+    }
     const uploadedImages = await Promise.all(
-        productImage.map(async (image) => {
-            const imgUploadResponse = await cloudinary.uploader.upload(image, {
-                upload_preset: "flawless_",
-                invalidate: true,
-            });
+        req.files.map(async (image) => {
+            const imgUploadResponse = await cloudinary.uploader.upload(
+                image.path,
+                {
+                    upload_preset: "flawless_",
+                    invalidate: true,
+                },
+                (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        resp.status(500).send({
+                            message: "image upload fail",
+                        });
+                    }
+                }
+            );
             return {
                 url: imgUploadResponse.url,
                 publicID: imgUploadResponse.public_id,
             };
         })
     );
-
+    console.log(uploadedImages);
     const newProduct = await productModel.create({
         name,
         price,
@@ -98,8 +113,9 @@ const updateProduct = asyncHandler(async (req, res) => {
         description,
         category,
         subCategory,
-        productImages,
+        publicID,
     } = req.body;
+    const publicIDCol = JSON.parse(publicID);
 
     try {
         const product = await productModel.findById(id);
@@ -114,18 +130,19 @@ const updateProduct = asyncHandler(async (req, res) => {
         if (stock) updatedProductData.stock = stock;
         if (description) updatedProductData.description = description;
         if (category) updatedProductData.category = category;
-        if (subCategory && subCategory.length > 0)
-            updatedProductData.subCategory = subCategory;
+        if (subCategory) updatedProductData.subCategory = subCategory;
 
-        if (productImages && productImages.length > 0) {
-            const uploadPromises = productImages.map(async (img) => {
+        if (req.files && req.files.length > 0) {
+            const uploadPromises = req.files.map(async (img, idx) => {
                 try {
-                    const { image, publicID } = img;
-                    const uploadResp = await cloudinary.uploader.upload(image, {
-                        public_id: publicID,
-                        invalidate: true,
-                        overwrite: true,
-                    });
+                    const uploadResp = await cloudinary.uploader.upload(
+                        img.path,
+                        {
+                            public_id: publicIDCol[idx],
+                            invalidate: true,
+                            overwrite: true,
+                        }
+                    );
 
                     return {
                         url: uploadResp.url,
@@ -202,7 +219,7 @@ const getProductByProductGenre = asyncHandler(async (req, resp) => {
         query.category = category;
     }
     if (subCategory) {
-        query[`subCategory.name`] = subCategory;
+        query.subCategory = subCategory;
     }
     const products = await productModel.find(query);
     resp.status(200).send({

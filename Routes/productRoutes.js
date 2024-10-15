@@ -1,4 +1,5 @@
 const express = require("express");
+const uploadMulter = require("../middleware/multer");
 const productRoute = express.Router();
 const {
     createProduct,
@@ -9,11 +10,21 @@ const {
     getProductByProductGenre,
 } = require("../Controllers/productControllers");
 const verifyToken = require("../middleware/verifyToken");
-productRoute.post("/", verifyToken, createProduct);
+productRoute.post(
+    "/",
+    verifyToken,
+    uploadMulter.array("images", 3),
+    createProduct
+);
 productRoute.get("/", getAllProduct);
 productRoute.get("/genre", getProductByProductGenre);
 productRoute.get("/:id", getSpecificProduct);
-productRoute.patch("/:id", verifyToken, updateProduct);
+productRoute.patch(
+    "/:id",
+    uploadMulter.array("images", 3),
+    verifyToken,
+    updateProduct
+);
 productRoute.delete("/:id", verifyToken, deleteProduct);
 
 module.exports = productRoute;

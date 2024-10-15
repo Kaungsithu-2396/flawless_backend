@@ -44,7 +44,7 @@ const uploadOrder = asyncHandler(async (req, resp) => {
         resp.status(500);
         throw new Error("data upload fail");
     }
-    sendMail("Order Received",newData.email)
+    sendMail("Order Received", newData.email + newData.name + newData.phone)
         .then(() => console.log("success"))
         .catch((err) => console.log(err));
     resp.status(201).send({
@@ -70,4 +70,10 @@ const getOrderById = asyncHandler(async (req, resp) => {
         data: specificOrder,
     });
 });
-module.exports = { uploadOrder, getOrderById };
+const getAllOrders = asyncHandler(async (req, resp) => {
+    const orders = await orderModel.find();
+    resp.status(200).send({
+        data: orders,
+    });
+});
+module.exports = { uploadOrder, getOrderById, getAllOrders };
