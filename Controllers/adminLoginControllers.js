@@ -28,7 +28,7 @@ const loginController = asyncHandler(async (req, resp) => {
     const token = signToken("admin");
     resp.cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: true,
         path: "/",
         sameSite: "none",
     });

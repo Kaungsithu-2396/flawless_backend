@@ -20,7 +20,11 @@ const app = express();
 app.use(cookieParser());
 app.use(
     cors({
-        origin: [process.env.FE_BASE_URL, process.env.PRODUCTION_BASE_URL],
+        origin: [
+            process.env.FE_BASE_URL,
+            process.env.PRODUCTION_BASE_URL,
+            process.env.PRODUCTION_CMS_URL,
+        ],
         default: process.env.FE_BASE_URL,
         credentials: true,
     })
