@@ -20,15 +20,33 @@ const app = express();
 app.use(cookieParser());
 app.use(
     cors({
-        origin: [
-            process.env.FE_BASE_URL,
-            process.env.PRODUCTION_BASE_URL,
-            process.env.PRODUCTION_CMS_URL,
-        ],
-        default: process.env.FE_BASE_URL,
+        origin: function (origin, callback) {
+            if (
+                !origin ||
+                origin === process.env.FE_BASE_URL ||
+                origin === process.env.PRODUCTION_BASE_URL ||
+                origin === process.env.PRODUCTION_CMS_URL
+            ) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
         credentials: true,
     })
 );
+
+// app.use(
+//     cors({
+//         origin: [
+//             process.env.FE_BASE_URL,
+//             process.env.PRODUCTION_BASE_URL,
+//             process.env.PRODUCTION_CMS_URL,
+//         ],
+//         default: process.env.FE_BASE_URL,
+//         credentials: true,
+//     })
+// );
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.get("/", (req, resp) => {
