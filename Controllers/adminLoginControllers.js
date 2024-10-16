@@ -29,7 +29,7 @@ const loginController = asyncHandler(async (req, resp) => {
     resp.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-       
+        path: "/",
     });
     resp.status(200).send({
         message: "success",
