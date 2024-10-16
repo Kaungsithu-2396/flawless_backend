@@ -24,17 +24,18 @@ const loginController = asyncHandler(async (req, resp) => {
         resp.status(401);
         throw new Error("Password or email incorrect");
     }
-
-    const token = signToken("admin");
-    resp.cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        path: "/",
-        sameSite: "none",
-    });
-    resp.status(200).send({
-        message: "success",
-    });
+    if (isValidUser) {
+        const token = signToken("admin");
+        resp.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            path: "/",
+            sameSite: "none",
+        });
+        resp.status(200).send({
+            message: "success",
+        });
+    }
 });
 
 module.exports = {
