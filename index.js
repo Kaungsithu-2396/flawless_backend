@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv").config({ path: "./config.env" });
 const errorHandler = require("./middleware/errorHandler");
+const cookieParser = require("cookie-parser");
 const categoryRoutes = require("./Routes/categoryRoutes");
 const bodyParser = require("body-parser");
 const subCategoryRoute = require("./Routes/subCategoryRoutes");
@@ -16,6 +17,7 @@ const orderRoute = require("./Routes/orderRouters");
 const { searchRoute } = require("./Routes/searchRoute");
 connectDB();
 const app = express();
+app.use(cookieParser());
 app.use(
     cors({
         origin: [process.env.FE_BASE_URL, process.env.PRODUCTION_BASE_URL],
