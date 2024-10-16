@@ -30,6 +30,7 @@ const loginController = asyncHandler(async (req, resp) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         path: "/",
+        sameSite: "none",
     });
     resp.status(200).send({
         message: "success",
