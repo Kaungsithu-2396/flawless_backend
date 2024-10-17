@@ -30,10 +30,9 @@ const loginController = asyncHandler(async (req, resp) => {
             .cookie("token", token, {
                 httpOnly: true,
                 secure: true,
-                path: "/",
                 sameSite: "None",
                 expires: new Date(Date.now() + 3600000),
-                domain: ".vercel.app",
+                path: "/",
             })
             .send({
                 message: "success",
