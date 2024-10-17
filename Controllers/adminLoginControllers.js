@@ -30,7 +30,7 @@ const loginController = asyncHandler(async (req, resp) => {
             httpOnly: true,
             secure: true,
             path: "/",
-            sameSite: "none",
+            sameSite: "None",
         });
         resp.status(200).send({
             message: "success",
