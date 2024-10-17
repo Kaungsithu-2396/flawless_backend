@@ -1,7 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv").config({ path: "./config.env" });
 const errorHandler = require("./middleware/errorHandler");
-const cookieParser = require("cookie-parser");
 const categoryRoutes = require("./Routes/categoryRoutes");
 const bodyParser = require("body-parser");
 const subCategoryRoute = require("./Routes/subCategoryRoutes");
@@ -18,7 +17,6 @@ const { searchRoute } = require("./Routes/searchRoute");
 connectDB();
 const app = express();
 app.set("trust proxy", 1);
-app.use(cookieParser());
 
 app.use((req, resp, next) => {
     resp.header("Access-Control-Allow-Origin", "*");
