@@ -31,6 +31,7 @@ const loginController = asyncHandler(async (req, resp) => {
             secure: true,
             sameSite: "None",
             path: "/",
+            domain: "https://flawless-cms.vercel.app",
         });
         resp.send({
             message: "success",
