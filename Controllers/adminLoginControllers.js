@@ -31,6 +31,7 @@ const loginController = asyncHandler(async (req, resp) => {
             secure: true,
             path: "/",
             sameSite: "None",
+            expires: new Date(Date.now() + 3600000),
         });
         resp.status(200).send({
             message: "success",
