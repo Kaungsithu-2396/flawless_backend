@@ -17,11 +17,6 @@ const { searchRoute } = require("./Routes/searchRoute");
 connectDB();
 const app = express();
 app.set("trust proxy", 1);
-
-app.use((req, resp, next) => {
-    resp.header("Access-Control-Allow-Origin", "*");
-    next();
-});
 app.use(
     cors({
         credentials: true,

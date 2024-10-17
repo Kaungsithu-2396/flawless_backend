@@ -28,10 +28,9 @@ const loginController = asyncHandler(async (req, resp) => {
         const token = signToken("admin");
         resp.cookie("token", token, {
             httpOnly: true,
-            secure: true,
-            sameSite: "None",
+            secure: false,
+
             path: "/",
-            domain: "https://flawless-cms.vercel.app",
         });
         resp.send({
             message: "success",
