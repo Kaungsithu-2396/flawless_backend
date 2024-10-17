@@ -33,6 +33,7 @@ const loginController = asyncHandler(async (req, resp) => {
                 path: "/",
                 sameSite: "None",
                 expires: new Date(Date.now() + 3600000),
+                domain: "vercel.app",
             })
             .send({
                 message: "success",
