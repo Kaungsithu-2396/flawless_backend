@@ -17,7 +17,7 @@ const orderRoute = require("./Routes/orderRouters");
 const { searchRoute } = require("./Routes/searchRoute");
 connectDB();
 const app = express();
-app.set("trust proxy", true);
+app.set("trust proxy", 1);
 app.use(cookieParser());
 
 app.use(
@@ -33,6 +33,7 @@ app.use(
 );
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+
 app.get("/", (req, resp) => {
     resp.send("Welcome to flawless server");
 });

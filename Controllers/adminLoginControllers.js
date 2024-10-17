@@ -13,12 +13,12 @@ const hashPassword = createHashPassword(adminPassword);
 //@Route POST /api/login
 //@Access PRIVATE
 const loginController = asyncHandler(async (req, resp) => {
+    console.log("mingalar par");
     const { email, password } = req.body;
     if (!email || !password) {
         resp.status(404);
         throw new Error("Insufficient data provided");
     }
-
     const isValidUser = await bcrypt.compare(password, hashPassword);
     if (!isValidUser) {
         resp.status(401);
@@ -26,16 +26,17 @@ const loginController = asyncHandler(async (req, resp) => {
     }
     if (isValidUser) {
         const token = signToken("admin");
-        resp.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            path: "/",
-            sameSite: "none",
-            expires: new Date(Date.now() + 3600000),
-        });
-        resp.status(200).send({
-            message: "success",
-        });
+        resp.status(200)
+            .cookie("token", token, {
+                httpOnly: true,
+                secure: true,
+                path: "/",
+                sameSite: "none",
+                expires: new Date(Date.now() + 3600000),
+            })
+            .send({
+                message: "success",
+            });
     }
 });
 
