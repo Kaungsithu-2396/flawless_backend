@@ -31,7 +31,7 @@ const loginController = asyncHandler(async (req, resp) => {
                 httpOnly: true,
                 secure: true,
                 path: "/",
-                sameSite: "none",
+                sameSite: "None",
                 expires: new Date(Date.now() + 3600000),
             })
             .send({
