@@ -17,34 +17,18 @@ const orderRoute = require("./Routes/orderRouters");
 const { searchRoute } = require("./Routes/searchRoute");
 connectDB();
 const app = express();
+app.set("trust proxy", true);
 app.use(cookieParser());
-// app.use(
-//     cors({
-//         origin: function (origin, callback) {
-//             if (
-//                 !origin ||
-//                 origin === process.env.FE_BASE_URL ||
-//                 origin === process.env.PRODUCTION_BASE_URL ||
-//                 origin === process.env.PRODUCTION_CMS_URL
-//             ) {
-//                 callback(null, true);
-//             } else {
-//                 callback(new Error("Not allowed by CORS"));
-//             }
-//         },
-//         credentials: true,
-//         exposedHeaders: ["set-cookie"],
-//     })
-// );
 
 app.use(
     cors({
+        credentials: true,
         origin: [
             process.env.FE_BASE_URL,
             process.env.PRODUCTION_BASE_URL,
             process.env.PRODUCTION_CMS_URL,
         ],
-        credentials: true,
+        methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
     })
 );
 app.use(bodyParser.json({ limit: "50mb" }));
