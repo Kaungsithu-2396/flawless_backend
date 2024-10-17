@@ -10,21 +10,11 @@ const {
     getProductByProductGenre,
 } = require("../Controllers/productControllers");
 const verifyToken = require("../middleware/verifyToken");
-productRoute.post(
-    "/",
-    verifyToken,
-    uploadMulter.array("images", 3),
-    createProduct
-);
+productRoute.post("/", uploadMulter.array("images", 3), createProduct);
 productRoute.get("/", getAllProduct);
 productRoute.get("/genre", getProductByProductGenre);
 productRoute.get("/:id", getSpecificProduct);
-productRoute.patch(
-    "/:id",
-    uploadMulter.array("images", 3),
-    verifyToken,
-    updateProduct
-);
-productRoute.delete("/:id", verifyToken, deleteProduct);
+productRoute.patch("/:id", uploadMulter.array("images", 3), updateProduct);
+productRoute.delete("/:id", deleteProduct);
 
 module.exports = productRoute;

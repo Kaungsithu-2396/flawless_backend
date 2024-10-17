@@ -7,6 +7,6 @@ const {
 const verifyToken = require("../middleware/verifyToken");
 const homePageRoute = express.Router();
 homePageRoute.get("/", getAllHomePageImage);
-homePageRoute.post("/", verifyToken, uploadHomePageImage);
-homePageRoute.delete("/:id", verifyToken, deleteHomePageImage);
+homePageRoute.post("/",  uploadHomePageImage);
+homePageRoute.delete("/:id",  deleteHomePageImage);
 module.exports = homePageRoute;
