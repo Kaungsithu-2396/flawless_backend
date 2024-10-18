@@ -128,21 +128,22 @@ const deleteCategory = asyncHandler(async (req, resp) => {
         throw new Error("invalid id");
     }
     const isValidCategory = await categoryModel.findById(id);
-    //delete the storage of image from cloudinary
-    cloudinary.uploader
-        .destroy(isValidCategory.categoryImage.public_id)
-        .then(() => console.log("success"))
-        .catch((error) => console.log(error));
+
     //verify any product exisit under the selected category to delete
     const isItemExisitUnderCategory = await productModel.find({
         category: isValidCategory.name,
     });
-    if (isItemExisitUnderCategory) {
+    if (isItemExisitUnderCategory.length !== 0) {
         resp.status(500);
         throw new Error(
             "Product with this category exisit. We cannot proceed these operation"
         );
     }
+    //delete the storage of image from cloudinary
+    cloudinary.uploader
+        .destroy(isValidCategory.categoryImage.public_id)
+        .then(() => console.log("success"))
+        .catch((error) => console.log(error));
     //respective subcategories are also deleted
     subCategoryModel
         .deleteMany({ mainCategory: id })

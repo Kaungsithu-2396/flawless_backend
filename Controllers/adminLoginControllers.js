@@ -26,14 +26,10 @@ const loginController = asyncHandler(async (req, resp) => {
     }
     if (isValidUser) {
         const token = signToken("admin");
-        resp.cookie("token", token, {
-            httpOnly: true,
-            secure: false,
 
-            path: "/",
-        });
         resp.send({
             message: "success",
+            token,
         });
     }
 });

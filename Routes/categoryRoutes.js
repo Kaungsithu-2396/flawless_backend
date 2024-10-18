@@ -8,9 +8,9 @@ const {
     deleteCategory,
 } = require("../Controllers/CategoryControllers");
 const verifyToken = require("../middleware/verifyToken");
-categoryRoutes.post("/", createCategory);
+categoryRoutes.post("/", verifyToken, createCategory);
 categoryRoutes.get("/", getCategory);
 categoryRoutes.get("/:id", getCategoryById);
-categoryRoutes.patch("/:id", updateCategory);
-categoryRoutes.delete("/:id", deleteCategory);
+categoryRoutes.patch("/:id", verifyToken, updateCategory);
+categoryRoutes.delete("/:id", verifyToken, deleteCategory);
 module.exports = categoryRoutes;
