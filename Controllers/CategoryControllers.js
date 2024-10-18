@@ -10,8 +10,12 @@ const productModel = require("../Models/productModel");
 const updateCategory = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { name, image, publicID } = req.body;
-
+    const existingCategory = await categoryModel.findById(id);
     try {
+        if (!existingCategory) {
+            res.status(500);
+            throw new Error("no category found");
+        }
         if (image) {
             // Upload new image to Cloudinary
             const uploadResp = await cloudinary.uploader.upload(image, {
@@ -22,13 +26,20 @@ const updateCategory = asyncHandler(async (req, res) => {
 
             if (uploadResp) {
                 const updatedCategoryData = {
-                    name: name || undefined,
+                    name: name || existingCategory.name,
                     categoryImage: {
                         url: uploadResp.url,
                         publicID: uploadResp.public_id,
                     },
                 };
-
+                if (name) {
+                    await productModel.updateMany(
+                        {
+                            category: existingCategory.name,
+                        },
+                        { $set: { category: name } }
+                    );
+                }
                 const updatedCategory = await categoryModel.findByIdAndUpdate(
                     id,
                     updatedCategoryData,
@@ -46,6 +57,15 @@ const updateCategory = asyncHandler(async (req, res) => {
             const updateData = {};
             if (name) {
                 updateData.name = name;
+            }
+
+            if (name) {
+                await productModel.updateMany(
+                    {
+                        category: existingCategory.name,
+                    },
+                    { $set: { category: name } }
+                );
             }
 
             const updatedCategory = await categoryModel.findByIdAndUpdate(

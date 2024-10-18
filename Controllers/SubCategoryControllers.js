@@ -1,6 +1,7 @@
 const subCategoryModel = require("../Models/subCategoryModel");
 const categoryModel = require("../Models/categoryModel");
 const asyncHandler = require("express-async-handler");
+const productModel = require("../Models/productModel");
 // @desc GET GetAll SubCategory
 // @route GET /api/subCategory
 // @access Private
@@ -67,15 +68,29 @@ const getSubCategoryAsParentCategory = asyncHandler(async (req, resp) => {
 // @access Private
 const updateSubCategory = asyncHandler(async (req, resp) => {
     const { id } = req.params;
+    const { name } = req.body;
     if (!id) {
         resp.status(500);
         throw new Error("invalid id");
     }
-    const isValidCategory = await subCategoryModel.findById(id);
-    if (!isValidCategory) {
+    const isValidSubCategory = await subCategoryModel.findById(id);
+    if (!isValidSubCategory) {
         resp.status(500);
         throw new Error("sub category not found");
     }
+    const isProductExisitWithThisSubCategory = await productModel.find({
+        subCategory: isValidSubCategory.name,
+    });
+
+    await productModel.updateMany(
+        {
+            subCategory: isValidSubCategory.name,
+        },
+        {
+            $set: { subCategory: req.body.name },
+        }
+    );
+
     const updatedSubCategory = await subCategoryModel.findByIdAndUpdate(
         id,
         req.body,
@@ -91,6 +106,18 @@ const deleteSubCategory = asyncHandler(async (req, resp) => {
     if (!id) {
         resp.status(500);
         throw new Error("invalid Id");
+    }
+    const isValidSubCategory = await subCategoryModel.findById(id);
+    if (!isValidSubCategory) {
+        resp.status(404);
+        throw new Error("no sub category found");
+    }
+    const isItemExisitUnderSubCategory = await productModel.find({
+        subCategory: isValidSubCategory.name,
+    });
+    if (isItemExisitUnderSubCategory.length !== 0) {
+        resp.status(500);
+        throw new Error("product with this subCategory exisit");
     }
     await subCategoryModel.findByIdAndDelete(id);
     resp.status(200).send({
