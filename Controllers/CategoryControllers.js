@@ -28,7 +28,7 @@ const updateCategory = asyncHandler(async (req, res) => {
                 const updatedCategoryData = {
                     name: name || existingCategory.name,
                     categoryImage: {
-                        url: uploadResp.url,
+                        url: uploadResp.secure_url,
                         publicID: uploadResp.public_id,
                     },
                 };
@@ -102,7 +102,10 @@ const createCategory = asyncHandler(async (req, resp) => {
         if (uploadResp) {
             const category = new categoryModel({
                 name,
-                categoryImage: uploadResp,
+                categoryImage: {
+                    url: uploadResp.secure_url,
+                    public_id: uploadResp.public_id,
+                },
             });
 
             const newCategory = await category.save();

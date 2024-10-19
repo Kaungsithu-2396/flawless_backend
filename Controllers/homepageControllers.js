@@ -18,7 +18,7 @@ const uploadHomePageImage = asyncHandler(async (req, resp) => {
     if (uploadImageResp) {
         const uploadHomePageImage = new homeModel({
             image: {
-                url: uploadImageResp.url,
+                url: uploadImageResp.secure_url,
                 publicID: uploadImageResp.public_id,
             },
         });

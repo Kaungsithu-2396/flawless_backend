@@ -44,7 +44,10 @@ const uploadOrder = asyncHandler(async (req, resp) => {
         resp.status(500);
         throw new Error("data upload fail");
     }
-    sendMail("Order Received", newData.email + newData.name + newData.phone)
+    sendMail(
+        "Order Received",
+        newData.email + "," + newData.name + "," + newData.phone
+    )
         .then(() => console.log("success"))
         .catch((err) => console.log(err));
     resp.status(201).send({

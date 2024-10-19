@@ -43,13 +43,7 @@ const orderSchema = new mongoose.Schema(
                 productCode: String,
                 productImages: [String],
                 stock: Number,
-                subCategory: [
-                    {
-                        _id: String,
-                        name: String,
-                        mainCategory: String,
-                    },
-                ],
+                subCategory: String,
             },
         ],
     },

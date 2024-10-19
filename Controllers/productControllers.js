@@ -51,7 +51,7 @@ const createProduct = asyncHandler(async (req, resp) => {
                 }
             );
             return {
-                url: imgUploadResponse.url,
+                url: imgUploadResponse.secure_url,
                 publicID: imgUploadResponse.public_id,
             };
         })
@@ -145,7 +145,7 @@ const updateProduct = asyncHandler(async (req, res) => {
                     );
 
                     return {
-                        url: uploadResp.url,
+                        url: uploadResp.secure_url,
                         publicID: uploadResp.public_id,
                     };
                 } catch (err) {
