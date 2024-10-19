@@ -5,8 +5,6 @@ const cloudinary = require("../config/cloudinaryConfig");
 // @route POST /api/product
 // @access Private
 const createProduct = asyncHandler(async (req, resp) => {
-    console.log(req.body);
-
     const {
         name,
         price,
@@ -56,7 +54,6 @@ const createProduct = asyncHandler(async (req, resp) => {
             };
         })
     );
-    console.log(uploadedImages);
     const newProduct = await productModel.create({
         name,
         price,
