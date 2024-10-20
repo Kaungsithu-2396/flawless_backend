@@ -78,10 +78,9 @@ const createProduct = asyncHandler(async (req, resp) => {
 const getAllProduct = asyncHandler(async (req, resp) => {
     const page = req.query.page || 0;
     const itemsPerPage = 12;
-    const allProducts = await productModel
-        .find()
-        .skip(page * itemsPerPage)
-        .limit(itemsPerPage);
+    const allProducts = await productModel.find();
+    // .skip(page * itemsPerPage)
+    // .limit(itemsPerPage);
     resp.status(200).send({
         data: allProducts,
     });

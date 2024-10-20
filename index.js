@@ -21,6 +21,7 @@ app.use(
     cors({
         credentials: true,
         origin: [
+            "192.168.1.3",
             process.env.FE_BASE_URL,
             process.env.PRODUCTION_BASE_URL,
             process.env.PRODUCTION_CMS_URL,
