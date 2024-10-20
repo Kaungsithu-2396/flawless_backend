@@ -7,6 +7,6 @@ const {
 } = require("../Controllers/OrderControllers");
 const orderRoute = express.Router();
 orderRoute.post("/", uploadOrder);
-orderRoute.get("/:id", verifyToken, getOrderById);
+orderRoute.get("/:id", getOrderById);
 orderRoute.get("/", getAllOrders);
 module.exports = orderRoute;
