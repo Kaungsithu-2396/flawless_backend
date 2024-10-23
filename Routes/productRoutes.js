@@ -8,6 +8,7 @@ const {
     updateProduct,
     deleteProduct,
     getProductByProductGenre,
+    paginatedProducts,
 } = require("../Controllers/productControllers");
 const verifyToken = require("../middleware/verifyToken");
 productRoute.post(
@@ -17,6 +18,7 @@ productRoute.post(
     createProduct
 );
 productRoute.get("/", getAllProduct);
+productRoute.get("/allProduct", paginatedProducts);
 productRoute.get("/genre", getProductByProductGenre);
 productRoute.get("/:id", getSpecificProduct);
 productRoute.patch(

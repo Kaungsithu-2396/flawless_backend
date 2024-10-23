@@ -76,12 +76,26 @@ const createProduct = asyncHandler(async (req, resp) => {
 // @route GET /api/product
 // @access Public
 const getAllProduct = asyncHandler(async (req, resp) => {
-    const page = req.query.page || 0;
-    const itemsPerPage = 12;
     const allProducts = await productModel.find();
     // .skip(page * itemsPerPage)
     // .limit(itemsPerPage);
     resp.status(200).send({
+        data: allProducts,
+    });
+});
+// @desc GET get Paginated Product
+// @route GET /api/product/allProduct
+// @access Public
+const paginatedProducts = asyncHandler(async (req, resp) => {
+    const page = req.query.page || 0;
+    const itemsPerPage = 12;
+    const allProducts = await productModel
+        .find()
+        .skip(page * itemsPerPage)
+        .limit(itemsPerPage);
+    const totalItems = await productModel.find();
+    resp.status(200).send({
+        totalItems: totalItems.length,
         data: allProducts,
     });
 });
@@ -233,4 +247,5 @@ module.exports = {
     getSpecificProduct,
     updateProduct,
     deleteProduct,
+    paginatedProducts,
 };
