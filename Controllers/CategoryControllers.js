@@ -162,11 +162,10 @@ const deleteCategory = asyncHandler(async (req, resp) => {
             "Product with this category exisit. We cannot proceed these operation"
         );
     }
+
     //delete the storage of image from cloudinary
-    cloudinary.uploader
-        .destroy(isValidCategory.categoryImage.public_id)
-        .then(() => console.log("success"))
-        .catch((error) => console.log(error));
+    await cloudinary.uploader.destroy(isValidCategory.categoryImage.public_id);
+
     //respective subcategories are also deleted
     subCategoryModel
         .deleteMany({ mainCategory: id })
