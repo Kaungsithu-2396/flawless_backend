@@ -1,5 +1,5 @@
 const express = require("express");
-const uploadMulter = require("../middleware/multer");
+const { uploadMulter } = require("../middleware/multer");
 const productRoute = express.Router();
 const {
     createProduct,

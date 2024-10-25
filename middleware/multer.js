@@ -5,4 +5,8 @@ const multerStorage = multer.diskStorage({
     },
 });
 const uploadMulter = multer({ storage: multerStorage });
-module.exports = uploadMulter;
+const uploadCategory = multer({
+    storage: multerStorage,
+    limits: { fileSize: 8 * 1024 * 1024 },
+});
+module.exports = { uploadMulter, uploadCategory };

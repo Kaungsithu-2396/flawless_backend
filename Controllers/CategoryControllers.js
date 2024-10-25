@@ -9,16 +9,17 @@ const productModel = require("../Models/productModel");
 // @access Private
 const updateCategory = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { name, image, publicID } = req.body;
+    const { name, publicID } = req.body;
+
     const existingCategory = await categoryModel.findById(id);
     try {
         if (!existingCategory) {
             res.status(500);
             throw new Error("no category found");
         }
-        if (image) {
+        if (req.file) {
             // Upload new image to Cloudinary
-            const uploadResp = await cloudinary.uploader.upload(image, {
+            const uploadResp = await cloudinary.uploader.upload(req.file.path, {
                 upload_preset: "flawless_",
                 public_id: publicID,
                 invalidate: true,
@@ -89,16 +90,21 @@ const updateCategory = asyncHandler(async (req, res) => {
 });
 
 const createCategory = asyncHandler(async (req, resp) => {
-    const { name, categoryImage } = req.body;
-    if (!name || !categoryImage) {
+    const { name } = req.body;
+    if (!name) {
         resp.status(400);
         throw new Error("please provide the complete data");
     }
-    if (categoryImage) {
-        const uploadResp = await cloudinary.uploader.upload(categoryImage, {
+    if (!req.file) {
+        resp.status(404);
+        throw new Error("no file found");
+    }
+
+    if (req.file) {
+        const uploadResp = await cloudinary.uploader.upload(req.file.path, {
             upload_preset: "flawless_",
         });
-
+        console.log(uploadResp);
         if (uploadResp) {
             const category = new categoryModel({
                 name,

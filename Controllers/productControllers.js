@@ -5,9 +5,6 @@ const cloudinary = require("../config/cloudinaryConfig");
 // @route POST /api/product
 // @access Private
 const createProduct = asyncHandler(async (req, resp) => {
-    console.log(req.body, "data");
-    console.log(req.files, "files");
-
     const {
         name,
         price,

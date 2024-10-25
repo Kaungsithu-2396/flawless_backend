@@ -7,12 +7,11 @@ const productModel = require("../Models/productModel");
 // @route POST /api/home
 // @access Private
 const uploadHomePageImage = asyncHandler(async (req, resp) => {
-    const { image } = req.body;
-    if (!image) {
+    if (!req.file) {
         resp.status(500);
         throw new Error("insufficient data providence");
     }
-    const uploadImageResp = await cloudinary.uploader.upload(image, {
+    const uploadImageResp = await cloudinary.uploader.upload(req.file.path, {
         upload_preset: "flawless_",
     });
     if (uploadImageResp) {
