@@ -9,6 +9,7 @@ const {
     deleteProduct,
     getProductByProductGenre,
     paginatedProducts,
+    getFeaturedProduct,
 } = require("../Controllers/productControllers");
 const verifyToken = require("../middleware/verifyToken");
 productRoute.post(
@@ -21,6 +22,7 @@ productRoute.get("/", getAllProduct);
 productRoute.get("/allProduct", paginatedProducts);
 productRoute.get("/genre", getProductByProductGenre);
 productRoute.get("/:id", getSpecificProduct);
+productRoute.get("/featured/products", getFeaturedProduct);
 productRoute.patch(
     "/:id",
     verifyToken,

@@ -110,6 +110,12 @@ const getSpecificProduct = asyncHandler(async (req, resp) => {
         data: specificProduct,
     });
 });
+const getFeaturedProduct = asyncHandler(async (req, resp) => {
+    const data = await productModel.find().limit(6);
+    resp.status(200).send({
+        data,
+    });
+});
 // @desc PATCH update Product
 // @route PATCH /api/product/:id
 // @access Private
@@ -245,4 +251,5 @@ module.exports = {
     updateProduct,
     deleteProduct,
     paginatedProducts,
+    getFeaturedProduct,
 };
