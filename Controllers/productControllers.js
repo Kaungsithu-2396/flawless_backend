@@ -64,9 +64,10 @@ const createProduct = asyncHandler(async (req, resp) => {
         subCategory,
         productImageCol: uploadedImages,
     });
-    const respRevalidate = await fetch(
+    const revalidateResp = await fetch(
         `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/,/product/${category},/product/${category}/${subCategory}`
     );
+    console.log(revalidateResp);
 
     resp.status(201).send({
         message: "success",
