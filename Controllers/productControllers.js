@@ -64,6 +64,10 @@ const createProduct = asyncHandler(async (req, resp) => {
         subCategory,
         productImageCol: uploadedImages,
     });
+    const respRevalidate = await fetch(
+        `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/,/product/${category},/product/${category}/${subCategory}`
+    );
+
     resp.status(201).send({
         message: "success",
         data: newProduct,
@@ -106,6 +110,11 @@ const getSpecificProduct = asyncHandler(async (req, resp) => {
         throw new Error("invalid id");
     }
     const specificProduct = await productModel.findById(id);
+    if (!specificProduct) {
+        resp.status(404).send({
+            message: "no product found",
+        });
+    }
     resp.status(200).send({
         data: specificProduct,
     });
@@ -181,7 +190,9 @@ const updateProduct = asyncHandler(async (req, res) => {
                 new: true,
             }
         );
-
+        const respRevalidate = await fetch(
+            `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/,/detail/${id},/product/${updatedProduct.category},/product/${updatedProduct.category}/${updatedProduct.subCategory}`
+        );
         return res.status(200).json({
             message: "Product updated successfully",
             data: updatedProduct,
@@ -213,6 +224,7 @@ const deleteProduct = asyncHandler(async (req, resp) => {
             try {
                 const { url, publicID } = el;
                 const deleteResp = await cloudinary.uploader.destroy(publicID);
+
                 return {
                     message: "success",
                 };
@@ -223,7 +235,11 @@ const deleteProduct = asyncHandler(async (req, resp) => {
         }
     );
     const deleteImages = await Promise.all(deleteProductImages);
+    const respRevalidate = await fetch(
+        `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/,/product/${isValidProduct.category},/product/${isValidProduct.category}/${isValidProduct.subCategory}`
+    );
     await productModel.findByIdAndDelete(id);
+
     resp.status(200).send({
         message: "delete success",
     });

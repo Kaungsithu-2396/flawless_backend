@@ -24,6 +24,7 @@ app.use(
             process.env.FE_BASE_URL,
             process.env.PRODUCTION_BASE_URL,
             process.env.PRODUCTION_CMS_URL,
+            process.env.FE_CMS_URL,
         ],
         methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
     })

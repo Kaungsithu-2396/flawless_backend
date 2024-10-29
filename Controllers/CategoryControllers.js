@@ -10,7 +10,6 @@ const productModel = require("../Models/productModel");
 const updateCategory = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { name, publicID } = req.body;
-
     const existingCategory = await categoryModel.findById(id);
     try {
         if (!existingCategory) {
@@ -20,9 +19,9 @@ const updateCategory = asyncHandler(async (req, res) => {
         if (req.file) {
             // Upload new image to Cloudinary
             const uploadResp = await cloudinary.uploader.upload(req.file.path, {
-                upload_preset: "flawless_",
                 public_id: publicID,
                 invalidate: true,
+                overwrite: true,
             });
 
             if (uploadResp) {
@@ -30,7 +29,7 @@ const updateCategory = asyncHandler(async (req, res) => {
                     name: name || existingCategory.name,
                     categoryImage: {
                         url: uploadResp.secure_url,
-                        publicID: uploadResp.public_id,
+                        public_id: uploadResp.public_id,
                     },
                 };
                 if (name) {
@@ -47,6 +46,9 @@ const updateCategory = asyncHandler(async (req, res) => {
                     {
                         new: true,
                     }
+                );
+                const respRevalidate = await fetch(
+                    `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
                 );
 
                 return res.status(200).json({
@@ -74,7 +76,9 @@ const updateCategory = asyncHandler(async (req, res) => {
                 updateData,
                 { new: true }
             );
-
+            const respRevalidate = await fetch(
+                `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
+            );
             return res.status(200).json({
                 message: "Category updated successfully",
                 data: updatedCategory,
@@ -113,8 +117,11 @@ const createCategory = asyncHandler(async (req, resp) => {
                     public_id: uploadResp.public_id,
                 },
             });
-
+            const respRevalidate = await fetch(
+                `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
+            );
             const newCategory = await category.save();
+
             resp.status(201).send({
                 message: "success",
                 data: newCategory,
@@ -157,7 +164,7 @@ const deleteCategory = asyncHandler(async (req, resp) => {
         throw new Error("invalid id");
     }
     const isValidCategory = await categoryModel.findById(id);
-
+    console.log(isValidCategory, "verify");
     //verify any product exisit under the selected category to delete
     const isItemExisitUnderCategory = await productModel.find({
         category: isValidCategory.name,
@@ -182,6 +189,9 @@ const deleteCategory = asyncHandler(async (req, resp) => {
             console.log(error);
         });
     await categoryModel.findByIdAndDelete(id);
+    const respRevalidate = await fetch(
+        `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
+    );
     resp.status(200).send({
         message: "delete success",
     });
