@@ -65,9 +65,8 @@ const createProduct = asyncHandler(async (req, resp) => {
         productImageCol: uploadedImages,
     });
     const revalidateResp = await fetch(
-        `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/,/product/${category},/product/${category}/${subCategory}`
+        `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
     );
-    console.log(revalidateResp);
 
     resp.status(201).send({
         message: "success",
@@ -191,9 +190,13 @@ const updateProduct = asyncHandler(async (req, res) => {
                 new: true,
             }
         );
+        // const respRevalidate = await fetch(
+        //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/,/detail/${id},/product/${updatedProduct.category},/product/${updatedProduct.category}/${updatedProduct.subCategory}`
+        // );
         const respRevalidate = await fetch(
-            `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/,/detail/${id},/product/${updatedProduct.category},/product/${updatedProduct.category}/${updatedProduct.subCategory}`
+            `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
         );
+
         return res.status(200).json({
             message: "Product updated successfully",
             data: updatedProduct,
@@ -236,9 +239,13 @@ const deleteProduct = asyncHandler(async (req, resp) => {
         }
     );
     const deleteImages = await Promise.all(deleteProductImages);
+    // const respRevalidate = await fetch(
+    //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/,/product/${isValidProduct.category},/product/${isValidProduct.category}/${isValidProduct.subCategory}`
+    // );
     const respRevalidate = await fetch(
-        `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/,/product/${isValidProduct.category},/product/${isValidProduct.category}/${isValidProduct.subCategory}`
+        `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
     );
+    console.log(respRevalidate, "testing delete");
     await productModel.findByIdAndDelete(id);
 
     resp.status(200).send({

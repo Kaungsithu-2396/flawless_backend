@@ -76,8 +76,11 @@ const updateCategory = asyncHandler(async (req, res) => {
                 updateData,
                 { new: true }
             );
+            // const respRevalidate = await fetch(
+            //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
+            // );
             const respRevalidate = await fetch(
-                `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
+                `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
             );
             return res.status(200).json({
                 message: "Category updated successfully",
@@ -117,8 +120,11 @@ const createCategory = asyncHandler(async (req, resp) => {
                     public_id: uploadResp.public_id,
                 },
             });
+            // const respRevalidate = await fetch(
+            //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
+            // );
             const respRevalidate = await fetch(
-                `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
+                `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
             );
             const newCategory = await category.save();
 
@@ -189,8 +195,11 @@ const deleteCategory = asyncHandler(async (req, resp) => {
             console.log(error);
         });
     await categoryModel.findByIdAndDelete(id);
+    // const respRevalidate = await fetch(
+    //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
+    // );
     const respRevalidate = await fetch(
-        `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
+        `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
     );
     resp.status(200).send({
         message: "delete success",
