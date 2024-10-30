@@ -42,9 +42,9 @@ const createSubCategory = asyncHandler(async (req, resp) => {
     // const respRevalidate = await fetch(
     //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
     // );
-    const respRevalidate = await fetch(
-        `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
-    );
+    // const respRevalidate = await fetch(
+    //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
+    // );
     resp.status(201).send({
         message: "success",
         newCategory,
@@ -104,9 +104,9 @@ const updateSubCategory = asyncHandler(async (req, resp) => {
     // const respRevalidate = await fetch(
     //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
     // );
-    const respRevalidate = await fetch(
-        `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
-    );
+    // const respRevalidate = await fetch(
+    //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
+    // );
     resp.status(200).send({
         message: "update success",
         data: updatedSubCategory,
@@ -134,9 +134,9 @@ const deleteSubCategory = asyncHandler(async (req, resp) => {
     // const respRevalidate = await fetch(
     //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
     // );
-    const respRevalidate = await fetch(
-        `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
-    );
+    // const respRevalidate = await fetch(
+    //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
+    // );
     resp.status(200).send({
         message: "delete success",
     });

@@ -47,9 +47,9 @@ const updateCategory = asyncHandler(async (req, res) => {
                         new: true,
                     }
                 );
-                const respRevalidate = await fetch(
-                    `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
-                );
+                // const respRevalidate = await fetch(
+                //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
+                // );
 
                 return res.status(200).json({
                     message: "Category updated successfully",
@@ -79,9 +79,9 @@ const updateCategory = asyncHandler(async (req, res) => {
             // const respRevalidate = await fetch(
             //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
             // );
-            const respRevalidate = await fetch(
-                `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
-            );
+            // const respRevalidate = await fetch(
+            //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
+            // );
             return res.status(200).json({
                 message: "Category updated successfully",
                 data: updatedCategory,
@@ -111,7 +111,7 @@ const createCategory = asyncHandler(async (req, resp) => {
         const uploadResp = await cloudinary.uploader.upload(req.file.path, {
             upload_preset: "flawless_",
         });
-        console.log(uploadResp);
+
         if (uploadResp) {
             const category = new categoryModel({
                 name,
@@ -123,9 +123,9 @@ const createCategory = asyncHandler(async (req, resp) => {
             // const respRevalidate = await fetch(
             //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
             // );
-            const respRevalidate = await fetch(
-                `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
-            );
+            // const respRevalidate = await fetch(
+            //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
+            // );
             const newCategory = await category.save();
 
             resp.status(201).send({

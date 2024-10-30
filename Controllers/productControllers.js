@@ -64,9 +64,9 @@ const createProduct = asyncHandler(async (req, resp) => {
         subCategory,
         productImageCol: uploadedImages,
     });
-    const revalidateResp = await fetch(
-        `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
-    );
+    // const revalidateResp = await fetch(
+    //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
+    // );
 
     resp.status(201).send({
         message: "success",
@@ -193,9 +193,9 @@ const updateProduct = asyncHandler(async (req, res) => {
         // const respRevalidate = await fetch(
         //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/,/detail/${id},/product/${updatedProduct.category},/product/${updatedProduct.category}/${updatedProduct.subCategory}`
         // );
-        const respRevalidate = await fetch(
-            `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
-        );
+        // const respRevalidate = await fetch(
+        //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
+        // );
 
         return res.status(200).json({
             message: "Product updated successfully",
