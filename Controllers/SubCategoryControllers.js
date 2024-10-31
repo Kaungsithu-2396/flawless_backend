@@ -39,12 +39,25 @@ const createSubCategory = asyncHandler(async (req, resp) => {
         mainCategory: categoryID,
     });
     const newCategory = await subCategory.save();
-    // const respRevalidate = await fetch(
-    //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
-    // );
-    // const respRevalidate = await fetch(
-    //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
-    // );
+    try {
+        const revalidateResp = await fetch(
+            `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    paths: ["/product", "/"],
+                }),
+            }
+        );
+        if (revalidateResp.status === 200) {
+            console.log("revalidate success for creating subCategory process");
+        }
+    } catch (error) {
+        console.log(error);
+    }
     resp.status(201).send({
         message: "success",
         newCategory,
@@ -101,12 +114,25 @@ const updateSubCategory = asyncHandler(async (req, resp) => {
         req.body,
         { new: true }
     );
-    // const respRevalidate = await fetch(
-    //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
-    // );
-    // const respRevalidate = await fetch(
-    //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
-    // );
+    try {
+        const revalidateResp = await fetch(
+            `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    paths: ["/product", "/"],
+                }),
+            }
+        );
+        if (revalidateResp.status === 200) {
+            console.log("revalidate success for updating subCategory process");
+        }
+    } catch (error) {
+        console.log(error);
+    }
     resp.status(200).send({
         message: "update success",
         data: updatedSubCategory,
@@ -131,12 +157,25 @@ const deleteSubCategory = asyncHandler(async (req, resp) => {
         throw new Error("product with this subCategory exisit");
     }
     await subCategoryModel.findByIdAndDelete(id);
-    // const respRevalidate = await fetch(
-    //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
-    // );
-    // const respRevalidate = await fetch(
-    //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
-    // );
+    try {
+        const revalidateResp = await fetch(
+            `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    paths: ["/product", "/"],
+                }),
+            }
+        );
+        if (revalidateResp.status === 200) {
+            console.log("revalidate success for deleting subCategory process");
+        }
+    } catch (error) {
+        console.log(error);
+    }
     resp.status(200).send({
         message: "delete success",
     });

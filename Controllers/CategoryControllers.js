@@ -76,12 +76,27 @@ const updateCategory = asyncHandler(async (req, res) => {
                 updateData,
                 { new: true }
             );
-            // const respRevalidate = await fetch(
-            //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
-            // );
-            // const respRevalidate = await fetch(
-            //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
-            // );
+            try {
+                const revalidateResp = await fetch(
+                    `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            paths: ["/product", "/"],
+                        }),
+                    }
+                );
+                if (revalidateResp.status === 200) {
+                    console.log(
+                        "revalidate success for updating category process"
+                    );
+                }
+            } catch (error) {
+                console.log(error);
+            }
             return res.status(200).json({
                 message: "Category updated successfully",
                 data: updatedCategory,
@@ -120,14 +135,28 @@ const createCategory = asyncHandler(async (req, resp) => {
                     public_id: uploadResp.public_id,
                 },
             });
-            // const respRevalidate = await fetch(
-            //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
-            // );
-            // const respRevalidate = await fetch(
-            //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
-            // );
             const newCategory = await category.save();
-
+            try {
+                const revalidateResp = await fetch(
+                    `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            paths: ["/product", "/"],
+                        }),
+                    }
+                );
+                if (revalidateResp.status === 200) {
+                    console.log(
+                        "revalidate success for creating category process"
+                    );
+                }
+            } catch (error) {
+                console.log(error);
+            }
             resp.status(201).send({
                 message: "success",
                 data: newCategory,
@@ -195,12 +224,26 @@ const deleteCategory = asyncHandler(async (req, resp) => {
             console.log(error);
         });
     await categoryModel.findByIdAndDelete(id);
-    // const respRevalidate = await fetch(
-    //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/`
-    // );
-    const respRevalidate = await fetch(
-        `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
-    );
+
+    try {
+        const revalidateResp = await fetch(
+            `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    paths: ["/product", "/"],
+                }),
+            }
+        );
+        if (revalidateResp.status === 200) {
+            console.log("revalidate success for deleting category process");
+        }
+    } catch (error) {
+        console.log(error);
+    }
     resp.status(200).send({
         message: "delete success",
     });

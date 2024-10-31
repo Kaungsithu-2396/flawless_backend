@@ -64,9 +64,30 @@ const createProduct = asyncHandler(async (req, resp) => {
         subCategory,
         productImageCol: uploadedImages,
     });
-    // const revalidateResp = await fetch(
-    //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
-    // );
+    try {
+        const revalidateResp = await fetch(
+            `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    paths: [
+                        "/product",
+                        "/",
+                        `/product/${newProduct.category}`,
+                        `/product/${newProduct.category}/${newProduct.subCategory}`,
+                    ],
+                }),
+            }
+        );
+        if (revalidateResp.status === 200) {
+            console.log("revalidate success for creating product process");
+        }
+    } catch (error) {
+        console.log(error);
+    }
 
     resp.status(201).send({
         message: "success",
@@ -190,12 +211,33 @@ const updateProduct = asyncHandler(async (req, res) => {
                 new: true,
             }
         );
-        // const respRevalidate = await fetch(
-        //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/,/detail/${id},/product/${updatedProduct.category},/product/${updatedProduct.category}/${updatedProduct.subCategory}`
-        // );
-        // const respRevalidate = await fetch(
-        //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
-        // );
+        try {
+            const revalidateResp = await fetch(
+                `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        paths: [
+                            "/product",
+                            "/",
+                            `/product/${product.category}`,
+                            `/product/${product.category}/${product.subCategory}`,
+                            `/product/${updatedProduct.category}`,
+                            `/product/${updatedProduct.category}/${updatedProduct.subCategory}`,
+                            `/detail/${id}`,
+                        ],
+                    }),
+                }
+            );
+            if (revalidateResp.status === 200) {
+                console.log("revalidate success for updating process");
+            }
+        } catch (error) {
+            console.log(error);
+        }
 
         return res.status(200).json({
             message: "Product updated successfully",
@@ -239,13 +281,31 @@ const deleteProduct = asyncHandler(async (req, resp) => {
         }
     );
     const deleteImages = await Promise.all(deleteProductImages);
-    // const respRevalidate = await fetch(
-    //     `${process.env.PRODUCTION_BASE_URL}/api/revalidate?path=/product,/,/product/${isValidProduct.category},/product/${isValidProduct.category}/${isValidProduct.subCategory}`
-    // );
-    const respRevalidate = await fetch(
-        `${process.env.PRODUCTION_BASE_URL}/api/revalidate`
-    );
-    console.log(respRevalidate, "testing delete");
+
+    try {
+        const revalidateResp = await fetch(
+            `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    paths: [
+                        "/product",
+                        "/",
+                        `/product/${isValidProduct.category}`,
+                        `/product/${isValidProduct.category}/${isValidProduct.subCategory}`,
+                    ],
+                }),
+            }
+        );
+        if (revalidateResp.status === 200) {
+            console.log("revalidate success for deleting process");
+        }
+    } catch (error) {
+        console.log(error);
+    }
     await productModel.findByIdAndDelete(id);
 
     resp.status(200).send({
