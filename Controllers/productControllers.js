@@ -82,6 +82,9 @@ const createProduct = asyncHandler(async (req, resp) => {
                 }),
             }
         );
+        console.log(`${process.env.PRODUCTION_BASE_URL}/api/webhook`, "url");
+        console.log(revalidateResp);
+
         if (revalidateResp.status === 200) {
             console.log("revalidate success for creating product process");
         }
