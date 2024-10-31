@@ -76,27 +76,27 @@ const updateCategory = asyncHandler(async (req, res) => {
                 updateData,
                 { new: true }
             );
-            // try {
-            //     const revalidateResp = await fetch(
-            //         `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
-            //         {
-            //             method: "POST",
-            //             headers: {
-            //                 "Content-Type": "application/json",
-            //             },
-            //             body: JSON.stringify({
-            //                 paths: ["/product", "/"],
-            //             }),
-            //         }
-            //     );
-            //     if (revalidateResp.status === 200) {
-            //         console.log(
-            //             "revalidate success for updating category process"
-            //         );
-            //     }
-            // } catch (error) {
-            //     console.log(error);
-            // }
+            try {
+                const revalidateResp = await fetch(
+                    `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            paths: ["/product", "/"],
+                        }),
+                    }
+                );
+                if (revalidateResp.status === 200) {
+                    console.log(
+                        "revalidate success for updating category process"
+                    );
+                }
+            } catch (error) {
+                console.log(error);
+            }
             return res.status(200).json({
                 message: "Category updated successfully",
                 data: updatedCategory,
@@ -136,27 +136,27 @@ const createCategory = asyncHandler(async (req, resp) => {
                 },
             });
             const newCategory = await category.save();
-            // try {
-            //     const revalidateResp = await fetch(
-            //         `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
-            //         {
-            //             method: "POST",
-            //             headers: {
-            //                 "Content-Type": "application/json",
-            //             },
-            //             body: JSON.stringify({
-            //                 paths: ["/product", "/"],
-            //             }),
-            //         }
-            //     );
-            //     if (revalidateResp.status === 200) {
-            //         console.log(
-            //             "revalidate success for creating category process"
-            //         );
-            //     }
-            // } catch (error) {
-            //     console.log(error);
-            // }
+            try {
+                const revalidateResp = await fetch(
+                    `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            paths: ["/product", "/"],
+                        }),
+                    }
+                );
+                if (revalidateResp.status === 200) {
+                    console.log(
+                        "revalidate success for creating category process"
+                    );
+                }
+            } catch (error) {
+                console.log(error);
+            }
             resp.status(201).send({
                 message: "success",
                 data: newCategory,
@@ -198,7 +198,7 @@ const deleteCategory = asyncHandler(async (req, resp) => {
         throw new Error("invalid id");
     }
     const isValidCategory = await categoryModel.findById(id);
-    console.log(isValidCategory, "verify");
+
     //verify any product exisit under the selected category to delete
     const isItemExisitUnderCategory = await productModel.find({
         category: isValidCategory.name,
@@ -224,25 +224,25 @@ const deleteCategory = asyncHandler(async (req, resp) => {
         });
     await categoryModel.findByIdAndDelete(id);
 
-    // try {
-    //     const revalidateResp = await fetch(
-    //         `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
-    //         {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify({
-    //                 paths: ["/product", "/"],
-    //             }),
-    //         }
-    //     );
-    //     if (revalidateResp.status === 200) {
-    //         console.log("revalidate success for deleting category process");
-    //     }
-    // } catch (error) {
-    //     console.log(error);
-    // }
+    try {
+        const revalidateResp = await fetch(
+            `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    paths: ["/product", "/"],
+                }),
+            }
+        );
+        if (revalidateResp.status === 200) {
+            console.log("revalidate success for deleting category process");
+        }
+    } catch (error) {
+        console.log(error);
+    }
     resp.status(200).send({
         message: "delete success",
     });
