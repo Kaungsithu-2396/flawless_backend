@@ -285,30 +285,20 @@ const deleteProduct = asyncHandler(async (req, resp) => {
     );
     const deleteImages = await Promise.all(deleteProductImages);
 
-    try {
-        const revalidateResp = await fetch(
-            `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    paths: [
-                        "/product",
-                        "/",
-                        `/product/${isValidProduct.category}`,
-                        `/product/${isValidProduct.category}/${isValidProduct.subCategory}`,
-                    ],
-                }),
-            }
-        );
-        if (revalidateResp.status === 200) {
-            console.log("revalidate success for deleting process");
-        }
-    } catch (error) {
-        console.log(error);
-    }
+    await fetch(`${process.env.PRODUCTION_BASE_URL}/api/webhook`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            paths: [
+                "/product",
+                "/",
+                `/product/${isValidProduct.category}`,
+                `/product/${isValidProduct.category}/${isValidProduct.subCategory}`,
+            ],
+        }),
+    });
     await productModel.findByIdAndDelete(id);
 
     resp.status(200).send({
