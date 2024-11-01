@@ -1,6 +1,7 @@
 const productModel = require("../Models/productModel");
 const asyncHandler = require("express-async-handler");
 const cloudinary = require("../config/cloudinaryConfig");
+const axios = require("axios");
 // @desc POST  create Product
 // @route POST /api/product
 // @access Private
@@ -64,33 +65,35 @@ const createProduct = asyncHandler(async (req, resp) => {
         subCategory,
         productImageCol: uploadedImages,
     });
-    try {
-        const revalidateResp = await fetch(
-            `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    paths: [
-                        "/product",
-                        "/",
-                        `/product/${newProduct.category}`,
-                        `/product/${newProduct.category}/${newProduct.subCategory}`,
-                    ],
-                }),
-            }
-        );
-        console.log(`${process.env.PRODUCTION_BASE_URL}/api/webhook`, "url");
-        console.log(revalidateResp);
+    await axios.get(`${process.env.PRODUCTION_BASE_URL}/api/revalidate`);
+    console.log(`${process.env.PRODUCTION_BASE_URL}/api/revalidate`);
 
-        if (revalidateResp.status === 200) {
-            console.log("revalidate success for creating product process");
-        }
-    } catch (error) {
-        console.log(error);
-    }
+    // try {
+    //     const revalidateResp = await fetch(
+    //         `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
+    //         {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify({
+    //                 paths: [
+    //                     "/product",
+    //                     "/",
+    //                     `/product/${newProduct.category}`,
+    //                     `/product/${newProduct.category}/${newProduct.subCategory}`,
+    //                 ],
+    //             }),
+    //         }
+    //     );
+    //     console.log(`${process.env.PRODUCTION_BASE_URL}/api/webhook`, "url");
+
+    //     if (revalidateResp.status === 200) {
+    //         console.log("revalidate success for creating product process");
+    //     }
+    // } catch (error) {
+    //     console.log(error);
+    // }
 
     resp.status(201).send({
         message: "success",
@@ -214,33 +217,33 @@ const updateProduct = asyncHandler(async (req, res) => {
                 new: true,
             }
         );
-        try {
-            const revalidateResp = await fetch(
-                `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        paths: [
-                            "/product",
-                            "/",
-                            `/product/${product.category}`,
-                            `/product/${product.category}/${product.subCategory}`,
-                            `/product/${updatedProduct.category}`,
-                            `/product/${updatedProduct.category}/${updatedProduct.subCategory}`,
-                            `/detail/${id}`,
-                        ],
-                    }),
-                }
-            );
-            if (revalidateResp.status === 200) {
-                console.log("revalidate success for updating process");
-            }
-        } catch (error) {
-            console.log(error);
-        }
+        // try {
+        //     const revalidateResp = await fetch(
+        //         `${process.env.PRODUCTION_BASE_URL}/api/webhook`,
+        //         {
+        //             method: "POST",
+        //             headers: {
+        //                 "Content-Type": "application/json",
+        //             },
+        //             body: JSON.stringify({
+        //                 paths: [
+        //                     "/product",
+        //                     "/",
+        //                     `/product/${product.category}`,
+        //                     `/product/${product.category}/${product.subCategory}`,
+        //                     `/product/${updatedProduct.category}`,
+        //                     `/product/${updatedProduct.category}/${updatedProduct.subCategory}`,
+        //                     `/detail/${id}`,
+        //                 ],
+        //             }),
+        //         }
+        //     );
+        //     if (revalidateResp.status === 200) {
+        //         console.log("revalidate success for updating process");
+        //     }
+        // } catch (error) {
+        //     console.log(error);
+        // }
 
         return res.status(200).json({
             message: "Product updated successfully",
@@ -284,21 +287,22 @@ const deleteProduct = asyncHandler(async (req, resp) => {
         }
     );
     const deleteImages = await Promise.all(deleteProductImages);
-
-    await fetch(`${process.env.PRODUCTION_BASE_URL}/api/webhook`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            paths: [
-                "/product",
-                "/",
-                `/product/${isValidProduct.category}`,
-                `/product/${isValidProduct.category}/${isValidProduct.subCategory}`,
-            ],
-        }),
-    });
+    await axios.get(`${process.env.PRODUCTION_BASE_URL}/api/revalidate`);
+    console.log(`${process.env.PRODUCTION_BASE_URL}/api/revalidate`);
+    // await fetch(`${process.env.PRODUCTION_BASE_URL}/api/webhook`, {
+    //     method: "POST",
+    //     headers: {
+    //         "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //         paths: [
+    //             "/product",
+    //             "/",
+    //             `/product/${isValidProduct.category}`,
+    //             `/product/${isValidProduct.category}/${isValidProduct.subCategory}`,
+    //         ],
+    //     }),
+    // });
     await productModel.findByIdAndDelete(id);
 
     resp.status(200).send({
