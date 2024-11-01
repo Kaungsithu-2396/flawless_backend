@@ -65,8 +65,6 @@ const createProduct = asyncHandler(async (req, resp) => {
         subCategory,
         productImageCol: uploadedImages,
     });
-    await axios.get(`${process.env.PRODUCTION_BASE_URL}/api/revalidate`);
-    console.log(`${process.env.PRODUCTION_BASE_URL}/api/revalidate`);
 
     // try {
     //     const revalidateResp = await fetch(
@@ -287,8 +285,7 @@ const deleteProduct = asyncHandler(async (req, resp) => {
         }
     );
     const deleteImages = await Promise.all(deleteProductImages);
-    await axios.get(`${process.env.PRODUCTION_BASE_URL}/api/revalidate`);
-    console.log(`${process.env.PRODUCTION_BASE_URL}/api/revalidate`);
+
     // await fetch(`${process.env.PRODUCTION_BASE_URL}/api/webhook`, {
     //     method: "POST",
     //     headers: {
